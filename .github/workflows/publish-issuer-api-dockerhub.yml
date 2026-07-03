@@ -1,6 +1,7 @@
 name: Publish patched issuer-api
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths:
