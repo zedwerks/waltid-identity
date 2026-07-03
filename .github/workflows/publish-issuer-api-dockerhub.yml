@@ -2,11 +2,11 @@ name: Publish patched issuer-api
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - 'waltid-services/waltid-issuer-api/**'
-      - 'waltid-libraries/credentials/waltid-mdoc-credentials/**'
+    inputs:
+      image_tag:
+        description: 'Tag to publish (e.g. 0.21.3-mdl-patch)'
+        required: true
+        default: 'v0.21.3-bstr'
 
 jobs:
   publish:
