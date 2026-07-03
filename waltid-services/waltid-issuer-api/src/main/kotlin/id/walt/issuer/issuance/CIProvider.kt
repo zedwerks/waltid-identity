@@ -447,6 +447,26 @@ open class CIProvider(
         }
     }
 
+    // @zedwerks patch. To make sure we honour bstr for portrait and signature objects
+    // in mDoc
+
+    // ISO 18013-5 attributes whose value must be encoded as CBOR bstr (major type 2),
+    // not as a generic array. Walt.ID's generic JSON->DataElement converter has no
+    // rule for this, so JsonArray<Int> falls through to a plain CBOR array instead.
+    private val KNOWN_BYTE_STRING_ATTRIBUTES = setOf(
+        "portrait",
+        "signature_usual_mark",
+        // add other Picture/bstr-typed attributes here as needed
+    )
+
+    private fun JsonElement.toDataElementFixed(elementIdentifier: String): DataElement {
+        if (elementIdentifier in KNOWN_BYTE_STRING_ATTRIBUTES && this is JsonArray) {
+            val bytes = this.map { it.jsonPrimitive.int.toByte() }.toByteArray()
+            return ByteStringElement(bytes)
+        }
+        return this.toDataElement()
+    }
+
     @OptIn(ExperimentalSerializationApi::class)
     private suspend fun doGenerateMDoc(
         credentialRequest: CredentialRequest,
@@ -520,7 +540,7 @@ open class CIProvider(
                     addItemToSign(
                         nameSpace = namespace.key,
                         elementIdentifier = property.key,
-                        elementValue = property.value.toDataElement(),
+                        elementValue = property.value.toDataElementFixed(property.key),
                     )
                 }
             }
