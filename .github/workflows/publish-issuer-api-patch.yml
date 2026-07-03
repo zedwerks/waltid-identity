@@ -1,4 +1,4 @@
-name: Publish patched issuer-api
+name: Publish patched issuer-api from branch
 
 on:
   workflow_dispatch:
