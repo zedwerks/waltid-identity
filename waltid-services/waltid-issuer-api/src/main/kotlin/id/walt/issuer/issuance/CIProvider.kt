@@ -2,6 +2,7 @@
 
 package id.walt.issuer.issuance
 
+
 import cbor.Cbor
 import com.nimbusds.jose.jwk.ECKey
 import com.nimbusds.jose.jwk.JWK
@@ -19,6 +20,7 @@ import id.walt.issuer.config.OIDCIssuerServiceConfig
 import id.walt.mdoc.COSECryptoProviderKeyInfo
 import id.walt.mdoc.SimpleCOSECryptoProvider
 import id.walt.mdoc.cose.COSESign1
+import id.walt.mdoc.dataelement.ByteStringElement
 import id.walt.mdoc.dataelement.DataElement
 import id.walt.mdoc.dataelement.MapElement
 import id.walt.mdoc.dataelement.toDataElement
