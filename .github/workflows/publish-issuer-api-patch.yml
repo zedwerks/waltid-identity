@@ -1,12 +1,14 @@
 name: Publish patched issuer-api from branch
 
 on:
+  push:
+    tags:
+      - 'v*'
   workflow_dispatch:
     inputs:
       image_tag:
         description: 'Tag to publish (e.g. 0.21.3-mdl-patch)'
-        required: true
-        default: 'v0.21.3-mdl-patch-v2'
+        required: false
 
 jobs:
   publish:
@@ -17,8 +19,16 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+      - name: Resolve image tag
+        id: vars
+        run: |
+          if [ -n "${{ github.event.inputs.image_tag }}" ]; then
+            echo "tag=${{ github.event.inputs.image_tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          fi
       - name: Publish image
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: ./gradlew :waltid-services:waltid-issuer-api:publishImage -PimageTag=${{ github.event.inputs.image_tag }}
+        run: ./gradlew :waltid-services:waltid-issuer-api:publishImage -PimageTag=${{ steps.vars.outputs.tag }}

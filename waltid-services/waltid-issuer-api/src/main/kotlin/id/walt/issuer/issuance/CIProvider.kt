@@ -526,7 +526,7 @@ open class CIProvider(
                     // add other Picture/bstr-typed attributes here as needed
                     )
 
-    // ISO 18013-5 attributes whose value must be encoded as CBOR full-date
+    // @zedwerks. ISO 18013-5 attributes whose value must be encoded as CBOR full-date
     // (tag 1004, RFC 8943), not as a generic tstr. Walt.ID's generic JSON->DataElement
     // converter has no rule for this, so a "YYYY-MM-DD" string falls through to a
     // plain untagged CBOR text string, which strict verifiers reject/warn on.
